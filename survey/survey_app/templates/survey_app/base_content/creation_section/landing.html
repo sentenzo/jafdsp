@@ -1,0 +1,34 @@
+{% extends 'survey_app/base.html' %}
+
+{% block content %}
+
+<div class="survey-landing-wrapper d-flex h-100 p-3 mx-auto flex-column text-center">
+    <header class="mb-auto">
+        <div class="inner">
+            <nav class="nav nav-masthead justify-content-center">
+                <a class="nav-link active" href="{% url 'landing' %}">Home</a>
+                <a class="nav-link" href="{% url 'login' %}">Sing in</a>
+                <a class="nav-link" href="{% url 'singup' %}">Sing up</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1>Survey App</h1>
+        <p class="lead">
+            {{ data }}
+        </p>
+        <p class="lead">
+            <a href="{% url 'survey_list' %}" class="btn btn-primary">Cteate a survey</a>
+        </p>
+    </main>
+
+    <footer class="mt-auto">
+        <div>
+            <p>Some footer stuff</p>
+        </div>
+    </footer>
+</div>
+
+
+{% endblock %}
