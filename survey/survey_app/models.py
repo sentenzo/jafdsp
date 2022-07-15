@@ -3,6 +3,8 @@ from django.db import models
 
 
 class Survey(models.Model):
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name="Creation datetime")
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=255, verbose_name="Title")
