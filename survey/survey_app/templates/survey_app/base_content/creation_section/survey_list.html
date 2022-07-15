@@ -1,5 +1,7 @@
 {% extends 'survey_app/base.html' %}
 
+{% load survey_tags %}
+
 {% block content %}
 {{ data }}
 <main class="survey_list w-100 m-auto p-3">
@@ -20,12 +22,12 @@
             </thead>
             <tbody>
                 {% for survey in surveys %}
-                <tr>
+                <tr class="{{ tr_class_choise | by_key:survey.status }}">
                     <td data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{survey.title}}">
                         {{ survey.title | truncatechars:24}}
                     </td>
                     <td>{{ survey.created_at | date:"Y-m-d" }}</td> <!-- {{ survey.created_at | date:"Y-m-d (D) - H:i:s" }} -->
-                    <td>draft</td>
+                    <td>{{survey.status}}</td>
                     <td>0</td>
                     <td><a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary btn-sm">edit</a></td>
                 </tr>

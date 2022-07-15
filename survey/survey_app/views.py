@@ -48,6 +48,12 @@ class SurveyList(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['data'] = "Survey List => Survey or New Survey or Survey Details"
+        tr_class_choise = {
+            Survey.SurveyStatusEnum.DRAFT.value: "table-primary",
+            Survey.SurveyStatusEnum.PUBLISHED.value: "table-info",
+            Survey.SurveyStatusEnum.CLOSED.value: "table-success",
+        }
+        context['tr_class_choise'] = tr_class_choise
         return context
 
     def get_queryset(self):
