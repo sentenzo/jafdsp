@@ -1,13 +1,29 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Survey(models.Model):
+    class SurveyStatusEnum(models.TextChoices):
+        # created and available for editing
+        DRAFT = "DRAFT"
+
+        # published, respondents can answer auestions"
+        PUBLISHED = "PUBLISHED"
+
+        # respondents can't get access, creator can see the results"
+        CLOSED = "CLOSED"
+
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name="Creation datetime")
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=255, verbose_name="Title")
+    status = models.CharField(
+        max_length=255,
+        choices=SurveyStatusEnum.choices,
+        default=SurveyStatusEnum.DRAFT,
+    )
 
 
 class Question(models.Model):
