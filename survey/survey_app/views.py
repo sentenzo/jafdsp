@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.contrib.auth.views import LoginView
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
+
 
 from .forms import *
 from .models import *
@@ -76,7 +78,7 @@ class NewSurvey(CreateView):
 class SurveyById(ListView):
     model = Question
     template_name = 'survey_app/base_content/creation_section/survey_by_id.html'
-    context_object_name = 'question'
+    context_object_name = 'questions'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -85,11 +87,25 @@ class SurveyById(ListView):
         return context
 
     def get_queryset(self):
-        return Question.objects.filter(survey_id=self.kwargs["survey_id"])
+        return Question.objects.filter(survey_id=int(self.kwargs["survey_id"]))
 
 
-def new_question(request, survey_id):
-    return HttpResponse("New Question => Survey")
+class NewQuestion(CreateView):
+    form_class = NewQuestionForm
+    template_name = 'survey_app/base_content/creation_section/new_question.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = "New Question => Survey"
+        return context
+
+    def form_valid(self, form):
+        survey = get_object_or_404(Survey, pk=self.kwargs["survey_id"])
+        form.instance.survey_id = survey.id
+        return super(NewQuestion, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('survey_by_id', kwargs={'survey_id': self.kwargs['survey_id']})
 
 
 def question(request, survey_id, question_id):

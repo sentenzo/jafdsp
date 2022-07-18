@@ -16,7 +16,6 @@
             <thead class="text-center">
                 <tr>
                     <th>Question text</th>
-                    <th>Options</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -26,13 +25,12 @@
                     <td data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{survey.title}}">
                         {{ question.text }}
                     </td>
-                    <td></td>
-                    <td><a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary btn-sm">edit</a></td>
+                    <td><a href="#" class="btn btn-primary btn-sm">edit</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>     
-        <a href="#" class="btn btn-primary">add another question</a>
+        <a href="{% url 'new_question' survey.pk %}" class="btn btn-primary">add another question</a>
     </div>
 </div>
 {% endblock %}

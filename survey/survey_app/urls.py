@@ -12,7 +12,7 @@ urlpatterns = [
     path('survey/<int:survey_id>/', SurveyById.as_view(), name="survey_by_id"),
 
     path('survey/<int:survey_id>/question/new/',
-         new_question, name="new_question"),
+         NewQuestion.as_view(), name="new_question"),
     path('survey/<int:survey_id>/question/<int:question_id>/',
          question, name="question"),
 

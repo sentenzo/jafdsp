@@ -33,3 +33,13 @@ class NewSurveyForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': ' '}),
         }
+
+
+class NewQuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        # fields = '__all__'
+        fields = ['text', ]
+        widgets = {
+            'text': forms.TextInput(attrs={'class': 'form-control', 'placeholder': ' '}),
+        }
