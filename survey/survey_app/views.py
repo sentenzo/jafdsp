@@ -108,8 +108,21 @@ class NewQuestion(CreateView):
         return reverse_lazy('survey_by_id', kwargs={'survey_id': self.kwargs['survey_id']})
 
 
-def question(request, survey_id, question_id):
-    return HttpResponse("Question ({question_id}) => New Option or Survey")
+class QuestionById(ListView):
+    model = Option
+    template_name = 'survey_app/base_content/creation_section/question_by_id.html'
+    context_object_name = 'options'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = f"Question ({self.kwargs['question_id']}) => New Option or Survey"
+        context["survey"] = Question.objects.get(pk=self.kwargs['survey_id'])
+        context["question"] = Question.objects.get(
+            pk=self.kwargs['question_id'])
+        return context
+
+    def get_queryset(self):
+        return Option.objects.filter(question_id=int(self.kwargs["question_id"]))
 
 
 def new_option(request, survey_id, question_id):

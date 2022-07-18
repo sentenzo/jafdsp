@@ -10,27 +10,27 @@
         
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ survey.title }}</h5>
+        <h5 class="card-title">{{ question.title }}</h5>
 
         <table class="table table-hover">
             <thead class="text-center">
                 <tr>
-                    <th>Question text</th>
+                    <th>Option text</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for question in questions %}
+                {% for option in options %}
                 <tr>
                     <td data-bs-toggle="tooltip">
-                        {{ question.text }}
+                        {{ option.text }}
                     </td>
-                    <td><a href="{% url 'question_by_id' survey.pk question.pk %}" class="btn btn-primary btn-sm">edit</a></td>
+                    <td></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>     
-        <a href="{% url 'new_question' survey.pk %}" class="btn btn-primary">add another question</a>
+        <a href="{% url 'new_option' survey.pk question.pk %}" class="btn btn-primary">add another option</a>
     </div>
 </div>
 {% endblock %}
