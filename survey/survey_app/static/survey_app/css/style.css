@@ -11,7 +11,8 @@ body {
     max-width: 24em;
 }
 
-.survey_list {
+.survey_list,
+.survey_card {
     max-width: 42em;
 }
 

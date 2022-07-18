@@ -1,6 +1,38 @@
 {% extends 'survey_app/base.html' %}
 
-{% block content %}
 
+
+{% block content %}
 {{ data }}
+
+<div class="survey_card w-100 m-auto p-3">
+    <div class="card-header">
+        
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ survey.title }}</h5>
+
+        <table class="table table-hover">
+            <thead class="text-center">
+                <tr>
+                    <th>Question text</th>
+                    <th>Options</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                <tr>
+                    <td data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{survey.title}}">
+                        {{ question.text }}
+                    </td>
+                    <td></td>
+                    <td><a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary btn-sm">edit</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>     
+        <a href="#" class="btn btn-primary">add another question</a>
+    </div>
+</div>
 {% endblock %}

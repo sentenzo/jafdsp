@@ -73,16 +73,19 @@ class NewSurvey(CreateView):
         return reverse_lazy('survey_list')
 
 
-class SurveyById(DetailView):
-    model = Survey
+class SurveyById(ListView):
+    model = Question
     template_name = 'survey_app/base_content/creation_section/survey_by_id.html'
-    pk_url_kwarg = 'survey_id'
-    context_object_name = 'survey'
+    context_object_name = 'question'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['data'] = f"Survey({self.kwargs['survey_id']}) = > Question or New Question or Survey List"
+        context["survey"] = Survey.objects.get(pk=self.kwargs['survey_id'])
         return context
+
+    def get_queryset(self):
+        return Question.objects.filter(survey_id=self.kwargs["survey_id"])
 
 
 def new_question(request, survey_id):
