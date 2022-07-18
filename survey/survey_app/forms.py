@@ -43,3 +43,13 @@ class NewQuestionForm(forms.ModelForm):
         widgets = {
             'text': forms.TextInput(attrs={'class': 'form-control', 'placeholder': ' '}),
         }
+
+
+class NewOptionForm(forms.ModelForm):
+    class Meta:
+        model = Option
+        # fields = '__all__'
+        fields = ['text', ]
+        widgets = {
+            'text': forms.TextInput(attrs={'class': 'form-control', 'placeholder': ' '}),
+        }

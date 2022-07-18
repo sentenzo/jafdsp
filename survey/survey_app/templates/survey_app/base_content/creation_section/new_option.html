@@ -1,0 +1,25 @@
+{% extends 'survey_app/base.html' %}
+
+{% block content %}
+
+{{ data }}
+
+<main class="form-login w-100 m-auto p-3">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-error alert alert-danger">{{ form.non_field_errors }}</div>
+
+        {% for field in form %}
+        <div class="form-floating">
+            {{ field }}
+            <label for="{{ field.id_for_label }}">{{field.label}}</label>
+        </div>
+        <div class="form-error alert alert-danger">{{ field.errors }}</div>
+        {% endfor %}
+
+        <button type="submit" class="w-100 btn btn-lg btn-primary mt-3">Create option</button>
+    </form>
+</main>
+
+{% endblock %}

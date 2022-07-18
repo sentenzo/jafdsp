@@ -125,8 +125,22 @@ class QuestionById(ListView):
         return Option.objects.filter(question_id=int(self.kwargs["question_id"]))
 
 
-def new_option(request, survey_id, question_id):
-    return HttpResponse("New Option => Question")
+class NewOption(CreateView):
+    form_class = NewOptionForm
+    template_name = 'survey_app/base_content/creation_section/new_option.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = "New Option => Question"
+        return context
+
+    def form_valid(self, form):
+        question = get_object_or_404(Question, pk=self.kwargs["question_id"])
+        form.instance.question_id = question.id
+        return super(NewOption, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('question_by_id', kwargs={'survey_id': self.kwargs['survey_id'], 'question_id': self.kwargs['question_id']})
 
 
 def survey_details(request, survey_id):
