@@ -3,7 +3,9 @@ from django.shortcuts import render
 from django.contrib.auth.views import LoginView
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout
 
 
 from .forms import *
@@ -11,8 +13,14 @@ from .models import *
 
 
 def landing(request):
+    is_authenticated = request.user.is_authenticated
+    user_name = request.user.username if is_authenticated else "Anonymous"
     return render(request, 'survey_app/base_content/creation_section/landing.html',
-                  context={"data": "Landing => Create Survey or Login or Singup"})
+                  context={
+                      "data": "Landing => Create Survey or Login or Singup",
+                      "is_authenticated": is_authenticated,
+                      "user_name": user_name,
+                  })
 
 
 class LoginCreator(LoginView):
@@ -25,7 +33,12 @@ class LoginCreator(LoginView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy('survey_list')
+        return reverse_lazy('landing')
+
+
+def logout_creator(request):
+    logout(request)
+    return redirect('landing')
 
 
 class SingupCreator(CreateView):
@@ -41,7 +54,9 @@ class SingupCreator(CreateView):
         return reverse_lazy('survey_list')
 
 
-class SurveyList(ListView):
+class SurveyList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
+
     model = Survey
 
     template_name = 'survey_app/base_content/creation_section/survey_list.html'
@@ -62,7 +77,9 @@ class SurveyList(ListView):
         return Survey.objects.all()
 
 
-class NewSurvey(CreateView):
+class NewSurvey(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
+
     form_class = NewSurveyForm
     template_name = 'survey_app/base_content/creation_section/new_survey.html'
 
@@ -75,7 +92,9 @@ class NewSurvey(CreateView):
         return reverse_lazy('survey_list')
 
 
-class SurveyById(ListView):
+class SurveyById(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
+
     model = Question
     template_name = 'survey_app/base_content/creation_section/survey_by_id.html'
     context_object_name = 'questions'
@@ -90,7 +109,9 @@ class SurveyById(ListView):
         return Question.objects.filter(survey_id=int(self.kwargs["survey_id"]))
 
 
-class NewQuestion(CreateView):
+class NewQuestion(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
+
     form_class = NewQuestionForm
     template_name = 'survey_app/base_content/creation_section/new_question.html'
 
@@ -108,7 +129,9 @@ class NewQuestion(CreateView):
         return reverse_lazy('survey_by_id', kwargs={'survey_id': self.kwargs['survey_id']})
 
 
-class QuestionById(ListView):
+class QuestionById(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
+
     model = Option
     template_name = 'survey_app/base_content/creation_section/question_by_id.html'
     context_object_name = 'options'
@@ -125,7 +148,9 @@ class QuestionById(ListView):
         return Option.objects.filter(question_id=int(self.kwargs["question_id"]))
 
 
-class NewOption(CreateView):
+class NewOption(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
+
     form_class = NewOptionForm
     template_name = 'survey_app/base_content/creation_section/new_option.html'
 

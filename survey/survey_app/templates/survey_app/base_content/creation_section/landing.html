@@ -9,6 +9,8 @@
                 <a class="nav-link active" href="{% url 'landing' %}">Home</a>
                 <a class="nav-link" href="{% url 'login' %}">Sing in</a>
                 <a class="nav-link" href="{% url 'singup' %}">Sing up</a>
+                <a class="nav-link" href="{% url 'logout' %}">Sing out</a>
+                <p>You are: {{ user_name }}</p>
             </nav>
         </div>
     </header>
