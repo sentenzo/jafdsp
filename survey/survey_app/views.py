@@ -74,7 +74,7 @@ class SurveyList(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        return Survey.objects.all()
+        return Survey.objects.filter(creator=self.request.user)
 
 
 class NewSurvey(LoginRequiredMixin, CreateView):
@@ -100,9 +100,11 @@ class SurveyById(LoginRequiredMixin, ListView):
     context_object_name = 'questions'
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        survey = get_object_or_404(
+            Survey, pk=self.kwargs['survey_id'], creator=self.request.user)
         context = super().get_context_data(**kwargs)
-        context['data'] = f"Survey({self.kwargs['survey_id']}) = > Question or New Question or Survey List"
-        context["survey"] = Survey.objects.get(pk=self.kwargs['survey_id'])
+        context['data'] = f"Survey({survey.pk}) = > Question or New Question or Survey List"
+        context["survey"] = survey
         return context
 
     def get_queryset(self):
@@ -116,6 +118,8 @@ class NewQuestion(LoginRequiredMixin, CreateView):
     template_name = 'survey_app/base_content/creation_section/new_question.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        get_object_or_404(
+            Survey, pk=self.kwargs['survey_id'], creator=self.request.user)
         context = super().get_context_data(**kwargs)
         context['data'] = "New Question => Survey"
         return context
@@ -137,11 +141,14 @@ class QuestionById(LoginRequiredMixin, ListView):
     context_object_name = 'options'
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        survey = get_object_or_404(
+            Survey, pk=self.kwargs['survey_id'], creator=self.request.user)
+        question = get_object_or_404(
+            Question, pk=self.kwargs['question_id'], survey=survey)
         context = super().get_context_data(**kwargs)
         context['data'] = f"Question ({self.kwargs['question_id']}) => New Option or Survey"
-        context["survey"] = Question.objects.get(pk=self.kwargs['survey_id'])
-        context["question"] = Question.objects.get(
-            pk=self.kwargs['question_id'])
+        context["survey"] = survey
+        context["question"] = question
         return context
 
     def get_queryset(self):
@@ -155,6 +162,11 @@ class NewOption(LoginRequiredMixin, CreateView):
     template_name = 'survey_app/base_content/creation_section/new_option.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        survey = get_object_or_404(
+            Survey, pk=self.kwargs['survey_id'], creator=self.request.user)
+        question = get_object_or_404(
+            Question, pk=self.kwargs['question_id'], survey=survey)
+
         context = super().get_context_data(**kwargs)
         context['data'] = "New Option => Question"
         return context
