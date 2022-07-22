@@ -27,6 +27,8 @@ urlpatterns = [
          destroyer, name="destroyer"),
     path('publisher/<int:survey_id>/',
          publish_survey, name="publisher"),
+    path('closer/<int:survey_id>/',
+         close_survey, name="closer"),
 
 
     ###########

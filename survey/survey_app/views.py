@@ -212,6 +212,14 @@ def publish_survey(request, survey_id):
     return redirect("survey_by_id", survey_id=survey_id)
 
 
+def close_survey(request, survey_id):
+    survey = Survey.objects.get(pk=survey_id)
+    survey.status = Survey.SurveyStatusEnum.CLOSED
+    survey.save()
+
+    return redirect("survey_by_id", survey_id=survey_id)
+
+
 ###########
 
 
