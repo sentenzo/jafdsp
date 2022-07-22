@@ -12,9 +12,17 @@
     <div class="card-body">
         <h5 class="card-title">{{ survey.title }}</h5>
 
-        <a href="{% url 'new_question' survey.pk %}" class="btn btn-primary">add another question</a>
+        {% if survey.status == "DRAFT" %}
+        <a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary">edit</a>
         <a href="{% url 'publisher' survey.pk %}" class="btn btn-outline-success">publish</a>
         <a href="{% url 'destroyer' 'survey' survey.pk %}" class="btn btn-outline-danger">delete</a>
+        {% elif survey.status == "PUBLISHED" %}
+        <a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary">view</a>
+        <a href="{% url 'closer' survey.pk %}" class="btn btn-outline-secondary">close</a>
+        {% elif survey.status == "CLOSED" %}
+        <a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary">view</a>
+        <a href="{% url 'destroyer' 'survey' survey.pk %}" class="btn btn-outline-danger">delete</a>
+        {% endif %}
 
         <table class="table table-hover">
             <thead class="text-center">
