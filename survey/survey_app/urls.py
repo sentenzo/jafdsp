@@ -25,11 +25,14 @@ urlpatterns = [
 
     path('destroyer/<str:object_name>/<int:object_id>/',
          destroyer, name="destroyer"),
+    path('publisher/<int:survey_id>/',
+         publish_survey, name="publisher"),
+
 
     ###########
 
-    path('survey/<int:survey_id>/start/', survey_start, name="survey_start"),
-    path('survey/<int:survey_id>/submit/', survey_submit, name="survey_submit"),
-    path('survey/<int:survey_id>/thanks/', survey_thanks, name="survey_thanks"),
+    path('survey/<str:url_key>/start/', survey_start, name="survey_start"),
+    path('survey/<str:url_key>/submit/', survey_submit, name="survey_submit"),
+    path('survey/<str:url_key>/thanks/', survey_thanks, name="survey_thanks"),
 
 ]

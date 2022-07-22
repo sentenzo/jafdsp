@@ -1,3 +1,4 @@
+import string
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView
@@ -195,16 +196,32 @@ def destroyer(request, object_name, object_id):
     redirection = {"survey": "survey_list"}[object_name]
     return redirect(redirection)
 
+
+def publish_survey(request, survey_id):
+    survey = Survey.objects.get(pk=survey_id)
+
+    from random import choices
+    url_key = "".join(choices(string.ascii_letters + string.digits, k=16))
+    status = Survey.SurveyStatusEnum.PUBLISHED
+
+    survey.status = status
+    survey.url_key = url_key
+
+    survey.save()
+
+    return redirect("survey_by_id", survey_id=survey_id)
+
+
 ###########
 
 
-def survey_start(request, survey_id):
+def survey_start(request, url_key):
     return HttpResponse("Survey Start => Survey Submit")
 
 
-def survey_submit(request, survey_id):
+def survey_submit(request, url_key):
     return HttpResponse("Survey Submit => Survey Submit")
 
 
-def survey_thanks(request, survey_id):
+def survey_thanks(request, url_key):
     return HttpResponse("Survey Thanks => ∅")

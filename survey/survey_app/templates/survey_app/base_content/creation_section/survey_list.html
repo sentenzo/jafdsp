@@ -32,7 +32,13 @@
                     <td>
                         {% if survey.status == "DRAFT" %}
                         <a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary btn-sm">edit</a>
-                        <a href="#" class="btn btn-outline-success btn-sm">publish</a>
+                        <a href="{% url 'publisher' survey.pk %}" class="btn btn-outline-success btn-sm">publish</a>
+                        <a href="{% url 'destroyer' 'survey' survey.pk %}" class="btn btn-outline-danger btn-sm">delete</a>
+                        {% elif survey.status == "PUBLISHED" %}
+                        <a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary btn-sm">view</a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm">close</a>
+                        {% elif survey.status == "CLOSED" %}
+                        <a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary btn-sm">view</a>
                         <a href="{% url 'destroyer' 'survey' survey.pk %}" class="btn btn-outline-danger btn-sm">delete</a>
                         {% endif %}
                     </td>

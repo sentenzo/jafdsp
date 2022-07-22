@@ -24,6 +24,8 @@ class Survey(models.Model):
         choices=SurveyStatusEnum.choices,
         default=SurveyStatusEnum.DRAFT,
     )
+    url_key = models.CharField(
+        max_length=255, verbose_name="URL key", null=True)
 
 
 class Question(models.Model):
