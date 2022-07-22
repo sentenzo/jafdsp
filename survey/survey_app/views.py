@@ -88,6 +88,10 @@ class NewSurvey(LoginRequiredMixin, CreateView):
         context['data'] = "New Survey => Survey List"
         return context
 
+    def form_valid(self, form):
+        form.instance.creator_id = self.request.user.id
+        return super(NewSurvey, self).form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('survey_list')
 
@@ -182,6 +186,14 @@ class NewOption(LoginRequiredMixin, CreateView):
 
 def survey_details(request, survey_id):
     return HttpResponse("Survey Details => Survey List")
+
+
+def destroyer(request, object_name, object_id):
+    object_type = {"survey": Survey}[object_name]
+    object_type.objects.get(pk=object_id).delete()
+
+    redirection = {"survey": "survey_list"}[object_name]
+    return redirect(redirection)
 
 ###########
 

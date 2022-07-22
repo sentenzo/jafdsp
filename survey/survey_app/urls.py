@@ -23,6 +23,9 @@ urlpatterns = [
     path('survey/<int:survey_id>/details/',
          survey_details, name="survey_details"),
 
+    path('destroyer/<str:object_name>/<int:object_id>/',
+         destroyer, name="destroyer"),
+
     ###########
 
     path('survey/<int:survey_id>/start/', survey_start, name="survey_start"),

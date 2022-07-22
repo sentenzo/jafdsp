@@ -11,6 +11,10 @@
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ survey.title }}</h5>
+        
+        <a href="{% url 'new_question' survey.pk %}" class="btn btn-primary">add another question</a>
+        <a href="#" class="btn btn-outline-success">publish</a>
+        <a href="{% url 'destroyer' 'survey' survey.pk %}" class="btn btn-outline-danger">delete</a>
 
         <table class="table table-hover">
             <thead class="text-center">
@@ -29,8 +33,7 @@
                 </tr>
                 {% endfor %}
             </tbody>
-        </table>     
-        <a href="{% url 'new_question' survey.pk %}" class="btn btn-primary">add another question</a>
+        </table>
     </div>
 </div>
 {% endblock %}
