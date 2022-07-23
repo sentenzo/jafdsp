@@ -1,0 +1,16 @@
+{% extends 'survey_app/base.html' %}
+
+
+{% block content %}
+{{ data }}
+<div class="survey_card w-100 m-auto p-3">
+    <div class="card-header">
+        {{ survey.title }}
+    </div>
+    <div class="card-body">
+        <p>You have been invited to take this survey</p>
+    </div>
+    <div><a href="{% url 'survey_submit' survey.url_key %}" class="btn btn-primary">Start</a></div>
+</div>
+
+{% endblock %}

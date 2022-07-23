@@ -18,6 +18,7 @@
         <a href="{% url 'destroyer' 'survey' survey.pk %}" class="btn btn-outline-danger">delete</a>
         {% elif survey.status == "PUBLISHED" %}
         <a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary">view</a>
+        <a href="{% url 'survey_start' survey.url_key %}" class="btn btn-primary">link</a>
         <a href="{% url 'closer' survey.pk %}" class="btn btn-outline-secondary">close</a>
         {% elif survey.status == "CLOSED" %}
         <a href="{% url 'survey_by_id' survey.pk %}" class="btn btn-primary">view</a>

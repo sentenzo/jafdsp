@@ -33,7 +33,8 @@ urlpatterns = [
 
     ###########
 
-    path('survey/<str:url_key>/start/', survey_start, name="survey_start"),
+    path('survey/<str:url_key>/start/',
+         SurveyStart.as_view(), name="survey_start"),
     path('survey/<str:url_key>/submit/', survey_submit, name="survey_submit"),
     path('survey/<str:url_key>/thanks/', survey_thanks, name="survey_thanks"),
 

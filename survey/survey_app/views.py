@@ -222,9 +222,17 @@ def close_survey(request, survey_id):
 
 ###########
 
+class SurveyStart(DetailView):
+    model = Survey
+    template_name = 'survey_app/base_content/survey_section/survey_by_url_key.html'
+    slug_url_kwarg = 'url_key'
+    slug_field = 'url_key'
+    context_object_name = 'survey'
 
-def survey_start(request, url_key):
-    return HttpResponse("Survey Start => Survey Submit")
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = "Survey Start => Survey Submit"
+        return context
 
 
 def survey_submit(request, url_key):
