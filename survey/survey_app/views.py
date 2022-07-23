@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 
 from .forms import *
@@ -189,22 +190,25 @@ def survey_details(request, survey_id):
     return HttpResponse("Survey Details => Survey List")
 
 
+@login_required
 def destroyer(request, object_name, object_id):
     object_type = {"survey": Survey}[object_name]
-    object_type.objects.get(pk=object_id).delete()
+    obj = get_object_or_404(object_type, pk=object_id, creator=request.user)
+    obj.delete()
 
     redirection = {"survey": "survey_list"}[object_name]
     return redirect(redirection)
 
 
+@login_required
 def publish_survey(request, survey_id):
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(
+        Survey, pk=survey_id, creator=request.user, status=Survey.SurveyStatusEnum.DRAFT)
 
     from random import choices
     url_key = "".join(choices(string.ascii_letters + string.digits, k=16))
-    status = Survey.SurveyStatusEnum.PUBLISHED
 
-    survey.status = status
+    survey.status = Survey.SurveyStatusEnum.PUBLISHED
     survey.url_key = url_key
 
     survey.save()
@@ -212,8 +216,10 @@ def publish_survey(request, survey_id):
     return redirect("survey_by_id", survey_id=survey_id)
 
 
+@login_required
 def close_survey(request, survey_id):
-    survey = Survey.objects.get(pk=survey_id)
+    survey = get_object_or_404(
+        Survey, pk=survey_id, creator=request.user, status=Survey.SurveyStatusEnum.PUBLISHED)
     survey.status = Survey.SurveyStatusEnum.CLOSED
     survey.save()
 
