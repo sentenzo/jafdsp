@@ -1,0 +1,13 @@
+{% extends 'survey_app/base.html' %}
+
+
+{% block content %}
+{{ data }}
+<div class="survey_card w-100 m-auto p-3">
+    <div class="card-body">
+        <h1>Thank you for taking part.</h1>
+        <p>Thanks for taking the survey "{{ survey.title }}."</p>
+    </div>
+</div>
+
+{% endblock %}

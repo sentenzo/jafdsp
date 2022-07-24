@@ -288,8 +288,10 @@ class SurveySubmit(DetailView):
         submission.save()
         [answer.save() for answer in answers]
 
-        return redirect("survey_submit", **kwargs)
+        return redirect("survey_thanks", kwargs["url_key"])
 
 
 def survey_thanks(request, url_key):
-    return HttpResponse("Survey Thanks => ∅")
+    survey = get_object_or_404(Survey, url_key=url_key)
+    template = "survey_app/base_content/survey_section/survey_by_url_key_thanks.html"
+    return render(request, template, {'survey': survey, 'data': "Survey Thanks => ∅"})
