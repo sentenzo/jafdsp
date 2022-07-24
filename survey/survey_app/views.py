@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView
 from django.views.generic import CreateView, ListView, DetailView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
@@ -186,8 +186,33 @@ class NewOption(LoginRequiredMixin, CreateView):
         return reverse_lazy('question_by_id', kwargs={'survey_id': self.kwargs['survey_id'], 'question_id': self.kwargs['question_id']})
 
 
+@login_required
 def survey_details(request, survey_id):
-    return HttpResponse("Survey Details => Survey List")
+    survey = get_object_or_404(Survey, pk=survey_id, creator=request.user)
+    questions = {}
+    for q in Question.objects.filter(survey=survey):
+        options = {}
+        total = 0
+        for o in Option.objects.filter(question=q):
+            count = Answer.objects.filter(option=o).count()
+            options[o.text] = count
+            total += count
+        for o in options:
+            options[o] = (options[o], total, 100 * options[o] // total)
+        questions[q.text] = options
+
+    host = request.get_host()
+    public_path = reverse("survey_start", args=[survey.url_key])
+    public_url = f"{request.scheme}://{host}{public_path}"
+    context = {
+        'survey': survey,
+        'questions': questions,
+        "sub_count": Submission.objects.filter(survey=survey).count(),
+        "url": public_url,
+        'data': "Survey Details => Survey List"
+    }
+    template = "survey_app/base_content/creation_section/survey_details_by_id.html"
+    return render(request, template, context)
 
 
 @login_required

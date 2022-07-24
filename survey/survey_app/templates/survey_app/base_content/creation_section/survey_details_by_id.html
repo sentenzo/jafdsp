@@ -1,0 +1,32 @@
+{% extends 'survey_app/base.html' %}
+
+{% block content %}
+{{ data }}
+<div class="survey_card w-100 m-auto p-3">
+    <h1>{{ survey.title }}</h1>
+    <p>You have had <strong>{{ sub_count }}</strong> submissions.</p>
+    <p>Survey url: <a href="{{url}}">{{url}}</a></p>
+    <h1 class="border-bottom">Results</h1>
+
+{% for question, options in questions.items %}
+<div class="text-muted pt-3">
+    <p class="pb-3 mb-0 lh-sm border-bottom">
+        <strong class="d-block text-gray-dark">{{ question }}</strong>
+    </p>
+    {% for option, counts in options.items %}
+    <span>{{option}}</span>
+<div class="progress">
+  <div class="progress-bar" role="progressbar" style="width: {{ counts.2 }}%" aria-valuenow="{{ counts.2 }}" aria-valuemin="0" aria-valuemax="100">{{ counts.2 }}%</div>
+</div>
+
+
+    {% endfor %}
+
+</div>
+{% endfor %}
+
+</div>
+
+
+
+{% endblock %}
