@@ -1,0 +1,27 @@
+{% extends 'survey_app/base.html' %}
+
+
+{% block content %}
+{{ data }}
+<div class="survey_card w-100 m-auto p-3">
+    <div class="card-header">
+        <h3>{{ survey.title }}</h3>
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% for question_text, group_name, options in questions %}
+        <fieldset class="mb-3">
+            <legend>{{ question_text }}</legend>
+            {% for value, text in options %}
+            <div class="form-check">
+                <input type="radio" name="{{ group_name }}" value="{{ value }}" class="form-check-input">
+                <label for="{{ group_name }}"  class="form-check-label">{{ text }}</label>
+            </div>
+            {% endfor %}
+        </fieldset>
+        {% endfor %}
+        <button type="submit" class="w-100 btn btn-lg btn-primary mt-3">Submit</button>
+    </form>
+</div>
+
+{% endblock %}

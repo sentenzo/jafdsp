@@ -230,7 +230,7 @@ def close_survey(request, survey_id):
 
 class SurveyStart(DetailView):
     model = Survey
-    template_name = 'survey_app/base_content/survey_section/survey_by_url_key.html'
+    template_name = 'survey_app/base_content/survey_section/survey_by_url_key_start.html'
     slug_url_kwarg = 'url_key'
     slug_field = 'url_key'
     context_object_name = 'survey'
@@ -241,8 +241,54 @@ class SurveyStart(DetailView):
         return context
 
 
-def survey_submit(request, url_key):
-    return HttpResponse("Survey Submit => Survey Submit")
+class SurveySubmit(DetailView):
+    model = Survey
+    template_name = 'survey_app/base_content/survey_section/survey_by_url_key_submit.html'
+    slug_url_kwarg = 'url_key'
+    slug_field = 'url_key'
+    context_object_name = 'survey'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = "Survey Submit => Survey Submit"
+
+        questions = []
+        for q in Question.objects.filter(survey=self.object):
+            options = []
+            for o in Option.objects.filter(question=q):
+                value = f"o_{o.pk}"
+                text = o.text
+                options.append((value, text))
+            question_text = q.text
+            group_name = f"q_{q.pk}"
+            t = (question_text, group_name, options)
+            questions.append(t)
+
+        context['questions'] = questions
+        return context
+
+    def post(self, request, *args, **kwargs):
+        submission = Submission(survey=self.get_object())
+        answers = []
+        for key in request.POST:
+            if key.startswith("q_"):
+                try:
+
+                    q_id = int(key[2:])
+                    o_id = int(request.POST[key][2:])
+
+                    question = get_object_or_404(Question, pk=q_id)
+                    option = get_object_or_404(
+                        Option, pk=o_id, question=question)
+
+                    answer = Answer(submission=submission, option=option)
+                    answers.append(answer)
+                except:
+                    return redirect("survey_submit", **kwargs)
+        submission.save()
+        [answer.save() for answer in answers]
+
+        return redirect("survey_submit", **kwargs)
 
 
 def survey_thanks(request, url_key):
